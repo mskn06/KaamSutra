@@ -1,0 +1,14 @@
+{
+  "name": "workthread",
+  "version": "1.0.0",
+  "description": "It will record the threads we tie up in a span of 2 months.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Muskaan Jain, Siddhant Jain",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
