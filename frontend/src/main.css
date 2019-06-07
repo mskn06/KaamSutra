@@ -1,0 +1,21 @@
+#App {
+    padding: 24px 0;
+}
+
+#logo {
+    height: 48px;
+    display: block;
+    margin: 40px auto 16px auto;
+}
+
+.category-name {
+    width: calc(100% - 32px);
+    margin: 40px 16px 16px 16px !important;
+}
+
+.actions {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
