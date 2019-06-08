@@ -11,10 +11,6 @@ const taskModel = Schema(
         description: {
             type: String,
             required: true
-        },
-        isComplete: {
-            type: Boolean,
-            required: true
         }
     },
     {
