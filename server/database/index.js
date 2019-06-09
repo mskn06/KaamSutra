@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose.connect(
-    `mongodb+srv://${"WebFixerr"}:${"B11khTpnD8K35RZT"}@project-ppgo7.mongodb.net/${"newTask"}?retryWrites=true`,
+    `mongodb+srv://${"WebFixerr"}:${"B11khTpnD8K35RZT"}@project-ppgo7.mongodb.net/${"KaamSutra"}?retryWrites=true`,
     { useNewUrlParser: true },
     err => {
         if (err) console.log(err);
