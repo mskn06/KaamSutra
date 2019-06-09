@@ -13,7 +13,7 @@ const postWork = async (req, res) => {
 
         if (!category) throw Error("Invalid Category Id!");
 
-        if (Work) {
+        if (work) {
             const newWork = new Work(work);
             const savedWork = await newWork.save();
 
@@ -21,7 +21,7 @@ const postWork = async (req, res) => {
             category.works.push(savedWork);
             await category.save();
 
-            res.send("Work added!" + newWork + savedWork + req.body);
+            res.send("Work added!");
         } else {
             res.send("Work not added!");
         }
