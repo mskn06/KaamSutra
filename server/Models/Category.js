@@ -7,9 +7,12 @@ const categoryModel = Schema(
         title: {
             type: String
         },
-        works: {
-            type: Number
-        }
+        works: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: "Work"
+            }
+        ]
     },
     {
         timestamps: true
