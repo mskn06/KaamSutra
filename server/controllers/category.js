@@ -4,6 +4,7 @@ const Category = require("../Models/category.js");
 const getAllCategory = async (_, res) => {
     const category = await Category.find();
     if (category) res.send({ category: category });
+    return "No categories found";
 };
 
 //(GET) Read: category
@@ -41,14 +42,15 @@ const postCategory = async (req, res) => {
 
 //(POST) Update: Category Name
 const updateCategory = (req, res) => {
-    Category.findOneAndUpdate(
-        { _id: req.params.categoryId },
-        { title: req.body.title },
-        (err, doc) => {
-            if (err && !doc) return res.send(500, { error: err });
+    Category.findOne({ _id: req.params.categoryId }, async (err, doc) => {
+        if (err && !doc) {
+            return res.send(500, { error: err });
+        } else {
+            doc.title = req.body.title;
+            await doc.save();
             return res.status(302).redirect("/" + doc._id);
         }
-    );
+    });
 };
 
 //(POST) Delete: Category

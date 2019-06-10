@@ -1,15 +1,27 @@
 var express = require("express");
 var router = express.Router();
 
-const { getWork, postWork } = require("../controllers/works.js");
+const {
+    getWork,
+    getWorks,
+    postWork,
+    updateWork,
+    deleteWork
+} = require("../controllers/works.js");
 
-/* GET users listing. */
-router.get("/", getWork);
+//(GET) Read: work
+router.get("/:workId", getWork);
 
+// (GET) Read: all works
+router.get("/", getWorks);
+
+//(POST) Create: work
 router.post("/", postWork);
 
-router.get("/:id", (req, res) => {
-    res.send({ id: "saved user:@ " + req.params.id });
-});
+//(POST) Update: work
+router.post("/:workId/update", updateWork);
+
+//(POST) Delete: work
+router.post("/:workId", deleteWork);
 
 module.exports = router;
