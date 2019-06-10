@@ -1,6 +1,16 @@
 const Work = require("../models/work.js");
 const Category = require("../models/category.js");
 
+//(GET) ALL WORK CORRESPONDING TO A CATEGORY
+const getWork = async (_, res) => {
+    const categoryId = req.body.category;
+    // const workId = req.body.work;
+
+    const works = await Work.findById(categoryId.workId);
+    if (works) res.send({ works: works });
+};
+
+// (POST) NEW WORK
 const postWork = async (req, res) => {
     const work = {
         title: req.body.title
@@ -21,7 +31,7 @@ const postWork = async (req, res) => {
             category.works.push(savedWork);
             await category.save();
 
-            res.send("Work added!");
+            res.redirect("/work/" + savedWork.id);
         } else {
             res.send("Work not added!");
         }
