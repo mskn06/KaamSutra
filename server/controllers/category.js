@@ -51,6 +51,7 @@ const updateCategory = (req, res) => {
     );
 };
 
+//(POST) Delete: Category
 const deleteCategory = (req, res) => {
     Category.findByIdAndDelete({ _id: req.params.id }, (err, doc) => {
         if (err && !doc) return res.status(500).send(err);
