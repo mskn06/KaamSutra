@@ -3,32 +3,21 @@ const Category = require("../models/category.js");
 
 //(GET) Read: a work
 const getWork = async (req, res) => {
-    if (work) res.send({ work: await Work.findById(req.body.workId) });
+    const work = await Work.findById(req.params.workId);
+    if (work) res.status(200).send({ work: work });
     return "Work not found!";
 };
 
 //(GET) Read: All work corresponding to a category
-const getWorks = async (_, res) => {
-    //finds the reqd category
-    const category = await Category.findById(req.params.categoryId);
-
+const getWorks = async (req, res) => {
     const works = [];
-    try {
-        //locates each work in the given category
-        category.works.forEach(workId => {
-            Work.findById(workId, (err, work) => {
-                if (err || !work) {
-                    throw Error("Invalid category!");
-                } else {
-                    works.push(work);
-                }
-            });
-        });
 
-        //send the works array to display
-        res.status(200).send({ works: works });
+    //finds the reqd category
+    try {
+        const category = await Category.findById(req.params.categoryId);
+        if (category) res.status(200).send({ works: category.works });
     } catch (err) {
-        return err;
+        res.send("No work found!" + err);
     }
 };
 
@@ -42,20 +31,23 @@ const postWork = async (req, res) => {
     try {
         const category = await Category.findById(req.params.categoryId);
 
-        if (!category) throw Error("Invalid Category Id!");
+        if (category != null) {
+            if (work) {
+                const newWork = new Work(work);
+                const savedWork = await newWork.save();
 
-        if (work) {
-            const newWork = new Work(work);
-            const savedWork = await newWork.save();
+                // Adding this new work node to the category's work list and saving it.
+                category.works.push(savedWork);
+                category.save();
 
-            // Adding this new work node to the category's work list and saving it.
-            category.works.push(savedWork);
-            await Category.save();
-
-            res.redirect("/works/" + savedWork.id);
-        } else {
-            throw Error("Work not added!");
+                res.status(302).redirect(
+                    "/" + req.params.categoryId + "/works/" + savedWork._id
+                );
+            } else {
+                res.send("Work not added!");
+            }
         }
+        res.send("Invalid Category Id!");
     } catch (err) {
         return err;
     }
@@ -70,43 +62,42 @@ const updateWork = async (req, res) => {
     const description = req.body.description;
 
     try {
-        if (!title && !description) throw Error("No New field added!");
+        if (!title && !description) res.send("No New field added!");
 
-        if (title)
+        if (title) {
             Work.findOne({ _id: workId }, async (err, doc) => {
                 if (!err && doc) {
                     doc.title = title;
                     await doc.save();
-                } else throw Error("Title not updated.");
+                }
             });
+        }
 
-        if (description)
+        if (description) {
             Work.findOne({ _id: workId }, async (err, doc) => {
                 if (!err && doc) {
                     doc.description = description;
                     await doc.save();
-                    res.status(200).redirect(
-                        "/" + categoryId + "/works/" + workId
-                    );
-                } else throw Error("Description not updated.");
+                }
             });
+        }
+        res.status(200).redirect("/" + categoryId + "/works/" + workId);
     } catch (err) {
-        return err;
+        res.send("Error in updating data");
     }
 };
 
 //(POST) Delete: work
-const deleteWork = async (req, res) => {
+const deleteWork = (req, res) => {
     const categoryId = req.params.categoryId;
     const workId = req.body.workId;
 
     try {
         Work.findByIdAndDelete(workId, (err, work) => {
-            if (err || !work) throw Error("Couldn't delete Work");
-            return res.status(200).redirect("/:" + categoryId + "/works");
+            if (!err) res.status(200).redirect("/" + categoryId + "/works");
         });
     } catch (err) {
-        return err;
+        res.send("Couldn't delete Work");
     }
 };
 

@@ -31,12 +31,12 @@ const postCategory = async (req, res) => {
                     const savedCategory = await newCategory.save();
                     res.redirect("/" + savedCategory.id);
                 } else {
-                    throw Error("Category already exists!");
+                    res.send("Category already exists!");
                 }
             });
         }
     } catch (err) {
-        console.log(err);
+        return { error: err };
     }
 };
 
@@ -57,7 +57,7 @@ const updateCategory = (req, res) => {
 const deleteCategory = (req, res) => {
     Category.findByIdAndDelete({ _id: req.params.categoryId }, (err, doc) => {
         if (err && !doc) return res.status(500).send(err);
-        return res.status(200).send("Category Deleted Successfully!");
+        return res.status(200).redirect("/");
     });
 };
 

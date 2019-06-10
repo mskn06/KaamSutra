@@ -10,18 +10,18 @@ const {
 } = require("../controllers/works.js");
 
 //(GET) Read: work
-router.get("/:workId", getWork);
+router.get("/:categoryId/works/:workId", getWork);
 
 // (GET) Read: all works
-router.get("/", getWorks);
+router.get("/:categoryId/works/", getWorks);
 
 //(POST) Create: work
-router.post("/", postWork);
+router.post("/:categoryId/works/", postWork);
 
 //(POST) Update: work
-router.post("/:workId/update", updateWork);
+router.post("/:categoryId/works/:workId/update", updateWork);
 
 //(POST) Delete: work
-router.post("/:workId", deleteWork);
+router.post("/:categoryId/works/:workId", deleteWork);
 
 module.exports = router;
