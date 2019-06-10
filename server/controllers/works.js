@@ -1,6 +1,8 @@
 const Work = require("../models/work.js");
 
+//(GET) Read: All works
 const getWork = async (_, res) => {
+    const categoryId = req.params.categoryId;
     const works = await Work.find();
     if (works) res.send({ works: works });
 };

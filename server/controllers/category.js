@@ -1,14 +1,14 @@
 const Category = require("../Models/category.js");
 
-//(GET) Id
-const getId = async (req, res) => {
-    res.send({ category: await Category.findById(req.params.id) });
-};
-
-//(GET) Read: all categories
-const getCategory = async (_, res) => {
+//(GET) All category
+const getAllCategory = async (_, res) => {
     const category = await Category.find();
     if (category) res.send({ category: category });
+};
+
+//(GET) Read: category
+const getCategory = async (req, res) => {
+    res.send({ category: await Category.findById(req.params.categoryId) });
 };
 
 //(POST) Create: new Category
@@ -42,7 +42,7 @@ const postCategory = async (req, res) => {
 //(POST) Update: Category Name
 const updateCategory = (req, res) => {
     Category.findOneAndUpdate(
-        { _id: req.params.id },
+        { _id: req.params.categoryId },
         { title: req.body.title },
         (err, doc) => {
             if (err && !doc) return res.send(500, { error: err });
@@ -53,13 +53,13 @@ const updateCategory = (req, res) => {
 
 //(POST) Delete: Category
 const deleteCategory = (req, res) => {
-    Category.findByIdAndDelete({ _id: req.params.id }, (err, doc) => {
+    Category.findByIdAndDelete({ _id: req.params.categoryId }, (err, doc) => {
         if (err && !doc) return res.status(500).send(err);
         return res.status(200).send("Category Deleted Successfully!");
     });
 };
 
-exports.getId = getId;
+exports.getAllCategory = getAllCategory;
 exports.getCategory = getCategory;
 exports.postCategory = postCategory;
 exports.updateCategory = updateCategory;
