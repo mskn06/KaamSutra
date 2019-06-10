@@ -3,8 +3,7 @@ const Category = require("../models/category.js");
 
 //(GET) Read: a work
 const getWork = async (req, res) => {
-    if (work) 
-        res.send({ work: await Work.findById(req.body.workId)});
+    if (work) res.send({ work: await Work.findById(req.body.workId) });
     return "Work not found!";
 };
 
@@ -17,7 +16,7 @@ const getWorks = async (_, res) => {
     try {
         //locates each work in the given category
         category.works.forEach(workId => {
-            await Work.findById(workId, (err, work) => {
+            Work.findById(workId, (err, work) => {
                 if (err || !work) {
                     throw Error("Invalid category!");
                 } else {
@@ -74,7 +73,7 @@ const updateWork = async (req, res) => {
         if (!title && !description) throw Error("No New field added!");
 
         if (title)
-            await Work.findOne({ _id: workId }, async (err, doc) => {
+            Work.findOne({ _id: workId }, async (err, doc) => {
                 if (!err && doc) {
                     doc.title = title;
                     await doc.save();
@@ -82,7 +81,7 @@ const updateWork = async (req, res) => {
             });
 
         if (description)
-            await Work.findOne({ _id: workId }, async (err, doc) => {
+            Work.findOne({ _id: workId }, async (err, doc) => {
                 if (!err && doc) {
                     doc.description = description;
                     await doc.save();
@@ -102,7 +101,7 @@ const deleteWork = async (req, res) => {
     const workId = req.body.workId;
 
     try {
-        await Work.findByIdAndDelete(workId, (err, work) => {
+        Work.findByIdAndDelete(workId, (err, work) => {
             if (err || !work) throw Error("Couldn't delete Work");
             return res.status(200).redirect("/:" + categoryId + "/works");
         });
