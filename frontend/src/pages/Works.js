@@ -1,4 +1,4 @@
-import React, { useState, createRef } from "react";
+import React, { useState, createRef, useEffect } from "react";
 
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
@@ -11,8 +11,9 @@ import LoadingDialog from "../components/LoadingDialog";
 import FormDialog from "../components/FormDialog";
 
 const Works = () => {
-    const [categories, setCategories] = useState([0, 1, 2, 3, 4]);
+    const [categories, setCategories] = useState(null);
     const [categoryDialogOpen, setcategoryDialogOpen] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
 
     const categoryRef = createRef();
 
@@ -37,29 +38,46 @@ const Works = () => {
             title="Add Category"
             text="To create a new Category, please enter an unique category name. This will let you organise your work better."
             primaryAction={() => {
-                setCategories([...categories, categories.slice(-1)[0] + 1]);
-                setcategoryDialogOpen(false);
+                setShowLoader(true);
+
+                const category = categoryRef.current.value;
+
+                if (category == null || category === "") return;
+
+                fetch("/api/category", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ title: category })
+                })
+                    .then(data => data.json())
+                    .then(jsonData => {
+                        setCategories([...categories, jsonData.category]);
+                        setcategoryDialogOpen(false);
+                        setShowLoader(false);
+                    })
+                    .catch(err => console.log(err));
             }}
         />
     );
 
-    const AddItemDialog = (
-        <FormDialog
-            open={categoryDialogOpen}
-            fields={categoryDialogFields}
-            handleClose={() => setcategoryDialogOpen(false)}
-            title="Add Category"
-            text="To create a new Category, please enter an unique category name. This will let you organise your work better."
-            primaryAction={id => {
-                setCategories([...categories, categories.slice(-1)[0] + 1]);
-                setcategoryDialogOpen(false);
-            }}
-        />
-    );
+    useEffect(() => {
+        setShowLoader(true);
+        fetch("/api/category", {
+            method: "GET"
+        })
+            .then(data => data.json())
+            .then(jsonData => {
+                setCategories(jsonData.category);
+                setShowLoader(false);
+            })
+            .catch(err => console.log(err));
+    }, []);
 
     return (
         <React.Fragment>
-            {/* <LoadingDialog open={true} /> */}
+            <LoadingDialog open={showLoader} />
             {CategoryDialog}
             <div id="Works" style={{ marginTop: 32 }}>
                 <Fab
@@ -83,17 +101,23 @@ const Works = () => {
                 >
                     Categories
                 </Typography>
+                {categories && categories.length === 0 && (
+                    <Typography paragraph color="primary">
+                        There are no works yet.
+                    </Typography>
+                )}
                 <Grid container spacing={3}>
-                    {categories.map(i => (
-                        <Grid item xs={12} sm={6} md={4}>
-                            <div
-                                className="animated fadeInUp"
-                                style={{ animationDelay: 60 * i + "ms" }}
-                            >
-                                <CategoryCard />
-                            </div>
-                        </Grid>
-                    ))}
+                    {categories &&
+                        categories.map((category, i) => (
+                            <Grid item xs={12} sm={6} md={4}>
+                                <div
+                                    className="animated fadeInUp"
+                                    style={{ animationDelay: 60 * i + "ms" }}
+                                >
+                                    <CategoryCard category={category} />
+                                </div>
+                            </Grid>
+                        ))}
                 </Grid>
             </div>
         </React.Fragment>

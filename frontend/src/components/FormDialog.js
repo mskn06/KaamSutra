@@ -25,7 +25,7 @@ function FormDialog(props) {
                     Cancel
                 </Button>
                 <Button onClick={primaryAction} color="primary">
-                    Subscribe
+                    Submit
                 </Button>
             </DialogActions>
         </Dialog>

@@ -14,7 +14,16 @@ const getWorks = async (req, res) => {
 
     //finds the reqd category
     try {
-        const category = await Category.findById(req.params.categoryId);
+        /* NOTE
+           In this route, we expect to get the details of all the works
+           in a particular Category, that's why there is this separate
+           api otherwise there is no difference between Category API and
+           this route. Therefore, we need to populate the works.
+         * ===================================================== */
+        const category = await Category.findById(
+            req.params.categoryId
+        ).populate("works");
+
         if (category) res.status(200).send({ works: category.works });
     } catch (err) {
         res.send("No work found!" + err);
@@ -37,12 +46,11 @@ const postWork = async (req, res) => {
                 const savedWork = await newWork.save();
 
                 // Adding this new work node to the category's work list and saving it.
-                category.works.push(savedWork);
+                category.works.unshift(savedWork);
                 category.save();
 
-                res.status(302).redirect(
-                    "/" + req.params.categoryId + "/works/" + savedWork._id
-                );
+                // No point in redirecting the request to another route when you already have the data
+                res.status(302).send({ work: savedWork });
             } else {
                 res.send("Work not added!");
             }

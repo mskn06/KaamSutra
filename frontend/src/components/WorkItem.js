@@ -15,7 +15,14 @@ const WorkItem = props => {
             </ListItemAvatar>
             <ListItemText
                 primary={props.value}
-                secondary={new Date(props.date).toDateString()}
+                secondary={
+                    <React.Fragment>
+                        <span>{props.description}</span>
+                        <span style={{ display: "block", marginTop: 8 }}>
+                            {new Date(props.date).toLocaleString()}
+                        </span>
+                    </React.Fragment>
+                }
             />
             <ListItemSecondaryAction>
                 <IconButton edge="end" aria-label="delete">

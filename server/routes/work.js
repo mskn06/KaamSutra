@@ -10,18 +10,29 @@ const {
 } = require("../controllers/works.js");
 
 //(GET) Read: work
-router.get("/:categoryId/works/:workId", getWork);
+router.get("/:categoryId/:workId", getWork);
 
 // (GET) Read: all works
-router.get("/:categoryId/works/", getWorks);
+
+/* NOTE:
+   Initial: /:categoryId/works/
+   Final: /:categoryId
+   Why? : Because the final URL would have become like this:
+   http://localhost:3000/api/work/categoryId/works
+   which is not very readable because Works is getting used twice
+   Now the url will be:
+   https://localhost:3000/api/work/categoryId
+ * ===================================================== */
+
+router.get("/:categoryId/", getWorks);
 
 //(POST) Create: work
-router.post("/:categoryId/works/", postWork);
+router.post("/:categoryId/", postWork);
 
 //(POST) Update: work
-router.post("/:categoryId/works/:workId/update", updateWork);
+router.post("/:categoryId/:workId/update", updateWork);
 
 //(POST) Delete: work
-router.post("/:categoryId/works/:workId", deleteWork);
+router.post("/:categoryId/:workId", deleteWork);
 
 module.exports = router;

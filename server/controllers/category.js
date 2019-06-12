@@ -15,28 +15,30 @@ const getCategory = async (req, res) => {
 //(POST) Create: new Category
 const postCategory = async (req, res) => {
     // Asks for category specific details.
-    const category = {
+    const categoryData = {
         title: req.body.title
     };
 
     try {
         //checks if info is provided
-        if (!category) throw Error("No Category found!");
+        if (!categoryData.title) throw Error("No Category found!");
         else {
             //checks if the category already exists
-            Category.findOne({ title: category.title }, async (err, doc) => {
-                if (err || !doc) {
-                    //creates new category
-                    const newCategory = new Category(category);
-                    const savedCategory = await newCategory.save();
-                    res.redirect("/" + savedCategory.id);
-                } else {
-                    res.send("Category already exists!");
-                }
+            const category = await Category.findOne({
+                title: categoryData.title
             });
+
+            if (!category) {
+                //creates new category
+                const newCategory = new Category(categoryData);
+                const savedCategory = await newCategory.save();
+                res.status(201).send({ category: savedCategory });
+            } else {
+                res.send("Category already exists!");
+            }
         }
     } catch (err) {
-        return { error: err };
+        res.send({ error: err });
     }
 };
 
