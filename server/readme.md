@@ -2,7 +2,7 @@ Using Category and Work APIs
 
 
 1. CATEGORY APIs
-	"http://@localhost:3000"
+	"http://@localhost:3001"
 
 C	(POST) "/"
 	INPUT -> title (in req.body)
