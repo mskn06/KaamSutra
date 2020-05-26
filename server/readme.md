@@ -51,7 +51,3 @@ Read	(GET) "/:workId"
 	INPUT -> workId (req.params)
 	OUTPUT -> gives work data
 ----------------------------------------------------------
-!ERROR!
-
-1. Read All works is giving only work ids. cant make it to provide work objects.
-2. Update command in Work API is giving correct results after sending the request 2 times.(idk why)
